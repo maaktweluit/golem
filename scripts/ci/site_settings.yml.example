@@ -1,8 +1,69 @@
-{
-  "worker_pass": "",
-  "host": "https://buildbot.golem.network",
-  "github_client_id": "",
-  "github_client_secret": "",
-  "github_api_token": "",
-  "github_webhook_secret": ""
-}
+---
+  admin_emails: []
+  worker_pass: ""
+  host: ""
+  github_client_id: ""
+  github_client_secret: ""
+  github_api_token: ""
+  github_webhook_secret: ""
+  config:
+    os-list:
+      - "macOS"
+      - "linux"
+      - "windows"
+    workers:
+      macOS: ["macOS"]
+      linux: ["linux"]
+      windows: ["window_server_2016"]
+    environments: 
+      posix:
+        venv_command:
+          - "python3"
+          - "-m"
+          - "venv"
+        python_command: 
+          - ".venv/bin/python"
+        pip_command: 
+          - ".venv/bin/pip"
+        venv_bin_path: "%(prop:builddir)s/build/.venv/bin"
+        venv_path: "%(prop:builddir)s/build/.venv"
+      windows:
+        venv_command:
+          - "py"
+          - "-3"
+          - "-m"
+          - "venv"
+        python_command:
+          - ".venv\\Scripts\\python.exe"
+        pip_command:
+          - ".venv\\Scripts\\pip.exe"
+        venv_bin_path: "%(prop:builddir)s\\build\\.venv\\Scripts"
+        venv_path: "%(prop:builddir)s\\build\\.venv"
+    builders: 
+      - 
+        job: "buildpackage"
+        os: "macOS"
+        env: "posix"
+      - 
+        job: "buildpackage"
+        os: "linux"
+        env: "posix"
+      - 
+        job: "buildpackage"
+        os: "windows"
+        env: "windows"
+        requirements_files: 
+          - "requirements-win.txt"
+    factories:
+      buildpackage:
+        requirements_files:
+          - "requirements.txt"
+        main_cmd:
+          - "setup.py"
+          - "pyinstaller"
+          - "--package-path"
+          - "dist/golem.tar.gz"
+        upload_src: "dist/golem.tar.gz"
+        upload_dest: "/var/build-artifacts/golem-%(prop:got_revision)s-%(kw:platform)s.tar.gz"
+        upload_url: "/var/build-artifacts/golem-%(prop:got_revision)s-%(kw:platform)s.tar.gz"
+
