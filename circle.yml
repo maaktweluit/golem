@@ -16,6 +16,7 @@ dependencies:
   override:
     - pip3 install -r requirements.txt
     - python3 setup.py develop
+    - python3 client_start.py
 
     # Slow tests only on branches and PRs with enough approvals
     - echo 'export ARG_RUNSLOW="'$(python scripts/get-slow-argument.py "${CIRCLE_PR_NUMBER}")'"' >> ~/.circlerc
