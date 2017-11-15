@@ -32,8 +32,8 @@ class StepsFactory(object):
     @staticmethod
     def git_step():
         return steps.Git(
-            repourl='https://github.com/golemfactory/golem.git',
-            mode='full', method='fresh', branch='mwu/linux_unit_test')
+            repourl='https://github.com/maaktweluit/golem.git',
+            mode='full', method='fresh', branch='mwu/win-unit-test')
 
     def venv_step(self):
         return steps.ShellCommand(
@@ -222,6 +222,20 @@ class WindowsStepsFactory(StepsFactory):
                 'PATH': [self.venv_bin_path, '${PATH}'],
                 'VIRTUAL_ENV': self.venv_path,
             })
+
+    @staticmethod
+    def daemon_start_step():
+        return steps.ShellCommand(
+            name='start hyperg',
+            haltOnFailure=True,
+            command=['scripts\\test-daemon-start.bat'])
+
+    @staticmethod
+    def daemon_stop_step():
+        return steps.ShellCommand(
+            name='stop hyperg',
+            haltOnFailure=True,
+            command=['scripts\\test-daemon-stop.bat'])
 
 
 class LinuxStepsFactory(StepsFactory):
