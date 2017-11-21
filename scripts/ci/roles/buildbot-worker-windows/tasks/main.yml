@@ -12,7 +12,7 @@
     - name: git
       params: '"/GitAndUnixToolsOnPath"'
     - name: visualstudio2017community
-    - name: visualstudio2017-workload-nativedesktop 
+    - name: visualstudio2017-workload-nativedesktop
       params: "--includeOptional"
 
 
@@ -21,7 +21,7 @@
   args:
     creates: C:\Python27\Scripts\pywin32_postinstall.py
   notify: pywin32 installed
-  
+
 
 - name: install buildbot-worker
   win_shell: py -2 -m pip install buildbot-worker
