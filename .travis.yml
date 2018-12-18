@@ -125,6 +125,7 @@ script:
         cargo install grcov;
       fi
     - if [ "$TRAVIS_TAG" ]; then export CARGO_OPTIONS="--release"; fi
+    - cd rust/golem
     - cargo build --verbose $CARGO_OPTIONS
     - cargo test --verbose $CARGO_OPTIONS
     - |
