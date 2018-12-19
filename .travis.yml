@@ -117,6 +117,12 @@ script:
     - export CXX=$CLANG_CXX
     - $CXX --version
     - |
+      if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+        export PATH="/usr/local/opt/llvm/bin:$PATH";
+        export LDFLAGS="-L/usr/local/opt/llvm/lib";
+        export CPPFLAGS="-I/usr/local/opt/llvm/include";
+      fi
+    - |
       if [ "$TRAVIS_RUST_VERSION" = "nightly" ] && [ -z "$TRAVIS_TAG" ]; then
         export CXXFLAGS="--coverage";
         export LDFLAGS="--coverage -lgcov";
