@@ -25,7 +25,7 @@ install:
   # Install Rust.
   - appveyor-retry appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
   - rustup-init -yv --default-toolchain %CHANNEL% --default-host x86_64-pc-windows-msvc
-  - set PATH=%USERPROFILE%\.cargo\bin;%PATH%
+  - set PATH=C:\Python36-x64;%USERPROFILE%\.cargo\bin;%PATH%
   - rustc -vV
   - cargo -vV
 
@@ -36,6 +36,9 @@ install:
   - set PATH=clang\bin;%PATH%
   - llvm-config --version
   - llvm-config --host-target
+
+  # Check python3
+  - python --version
 
   - set TARGET=%PLATFORM_TARGET%-pc-windows-msvc
   - if NOT "%PLATFORM_TARGET%" == "x86_64" (
@@ -58,15 +61,17 @@ build_script:
   - cargo build %CARGO_RELEASE_ARG% --locked --target %TARGET%
 
 test_script:
-  - cd rust\golem
   - cargo test %CARGO_RELEASE_ARG% --verbose
   - ps: |
       If ($env:CHANNEL -eq "nightly" -And $env:APPVEYOR_REPO_TAG -eq "false") {
-         cargo install grcov
+         Invoke-WebRequest -Uri "https://github.com/mozilla/grcov/releases/download/v0.3.2/grcov-win-x86_64.tar.bz2" -OutFile grcov-win-x86_64.tar.bz2
+         7z x grcov-win-x86_64.tar.bz2
+         7z x grcov-win-x86_64.tar
+         Copy-Item -Path grcov.exe -Destination "$env:USERPROFILE\.cargo\bin"
          mkdir ccov_dir
          Get-ChildItem -Path *\golem*.gc* -Recurse | Copy-Item -Destination ccov_dir
          Get-ChildItem -Path *\llvmgolem.gc* -Recurse | Copy-Item -Destination ccov_dir
-         .\target\debug\grcov ccov_dir -s . -t lcov --llvm --branch --ignore-not-existing --ignore-dir "C:*" | Out-File -Encoding "UTF8" -FilePath lcov.info
+         grcov ccov_dir -s . -t lcov --llvm --branch --ignore-not-existing --ignore-dir "C:*" | Out-File -Encoding "UTF8" -FilePath lcov.info
          (Get-Content lcov.info) | Foreach-Object {$_ -replace "\xEF\xBB\xBF", ""} | Set-Content lcov.info
          ((Get-Content lcov.info) -join "`n") + "`n" | Set-Content -NoNewline lcov.info
          $env:PATH = "C:\msys64\usr\bin;" + $env:PATH
