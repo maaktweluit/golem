@@ -16,7 +16,7 @@ KEYSTORE_FILE = 'keystore.json'
 TRANSACTION_FILE = 'tx.json'
 PASSWORD = 'goleM.8'
 
-_logging = False
+_logging = True
 
 
 def _log(*args):

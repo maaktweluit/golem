@@ -8,7 +8,7 @@ from ethereum.utils import sha3
 
 from golem_messages.cryptography import ECCx
 
-_logging = False
+_logging = True
 
 
 def _log(*args):
