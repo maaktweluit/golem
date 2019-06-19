@@ -34,7 +34,7 @@ class GolemNodeTest(NodeTestBase):
         self._run_test('golem.jpeg')
 
     def test_jpg(self):
-        self._run_test('golem.jpg')
+        self._run_test('golem.jpg', **{'task-package': 'test_task_1'},)
 
     def test_nested(self):
         self._run_test(
@@ -49,10 +49,7 @@ class GolemNodeTest(NodeTestBase):
         self._run_test('golem.task_output')
 
     def test_large_result(self):
-        self._run_test(
-            'golem.separate_hyperg',
-            **{'task-package': 'cubes', 'task-settings': '4k'},
-        )
+        self._run_test('golem.separate_hyperg', **{'task-settings': '4k'},)
 
     def test_restart_failed_subtasks(self):
         self._run_test('golem.restart_failed_subtasks')
