@@ -10,9 +10,6 @@ from setup_util.setup_commons import (
     get_long_description, find_required_packages, PyInstaller,
     move_wheel, DatabaseMigration)
 
-from golem.docker.manager import DockerManager
-from golem.tools.ci import in_appveyor, in_travis
-
 building_wheel = 'bdist_wheel' in sys.argv
 building_binary = 'pyinstaller' in sys.argv
 building_migration = 'migration' in sys.argv
