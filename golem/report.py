@@ -1,11 +1,15 @@
 from contextlib import contextmanager
 from functools import wraps
 
-from typing import Any, ClassVar, Dict, Optional, Tuple
+from typing import Any, ClassVar, Dict, Optional, Tuple, TYPE_CHECKING
 
 from twisted.internet.defer import Deferred, maybeDeferred
 
 from golem.rpc.mapping.rpceventnames import Golem
+
+
+if TYPE_CHECKING:
+    from golem.rpc.session import Publisher
 
 
 class Stage(object):
