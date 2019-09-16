@@ -5,7 +5,6 @@ from typing import Any, ClassVar, Dict, Optional, Tuple
 
 from twisted.internet.defer import Deferred, maybeDeferred
 
-from golem.rpc.session import Publisher
 from golem.rpc.mapping.rpceventnames import Golem
 
 
@@ -32,10 +31,10 @@ class Component(object):
 
 class EventPublisher:
     _initialized: ClassVar[bool] = False
-    _rpc_publisher: ClassVar[Optional[Publisher]] = None
+    _rpc_publisher: ClassVar[Optional['Publisher']] = None
 
     @classmethod
-    def initialize(cls, rpc_publisher: Publisher) -> bool:
+    def initialize(cls, rpc_publisher: 'Publisher') -> bool:
         if cls._initialized:
             return False
         cls._rpc_publisher = rpc_publisher
