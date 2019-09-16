@@ -8,7 +8,7 @@ from setuptools_rust import Binding, RustExtension
 from setup_util.setup_commons import (
     path, parse_requirements, get_version,
     get_long_description, find_required_packages, PyInstaller,
-    move_wheel, print_errors, DatabaseMigration)
+    move_wheel, DatabaseMigration)
 
 from golem.docker.manager import DockerManager
 from golem.tools.ci import in_appveyor, in_travis
@@ -99,17 +99,6 @@ setup(
     ]
 )
 
-if not (in_appveyor() or in_travis() or
-        building_wheel or building_binary):
-
-    docker_manager = DockerManager()
-
-    try:
-        DockerManager().pull_images()
-    except Exception as exc:  # pylint: disable=broad-except
-        print('Exception occurred:', exc)
-        DockerManager().build_images()
-
 if building_wheel:
     move_wheel()
 
@@ -119,24 +108,3 @@ if not building_migration:
     if not latest_migration_exists():
         raise RuntimeError("Database schema error: latest migration script "
                            "does not exist")
-
-
-# test a potential docker package conflict
-
-def _docker_conflict(e: Exception):
-    raise RuntimeError(
-        "Suspected conflict in python `docker` library.\n"
-        "Please run `pip uninstall -y docker docker-py` "
-        "and re-install golem's requirements. "
-    ) from e
-
-
-try:
-    from docker import DockerClient as Client
-except ImportError as import_error:
-    _docker_conflict(import_error)
-
-try:
-    Client().api
-except TypeError as type_error:
-    _docker_conflict(type_error)
